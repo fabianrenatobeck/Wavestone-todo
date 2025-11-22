@@ -1,0 +1,33 @@
+# --- Dependencies (Frontend & Backend) ---
+**/node_modules/
+# Das "**/" bedeutet: Egal in welchem Unterordner
+
+# --- Builds ---
+dist/
+build/
+frontend/dist/
+frontend/build/
+
+# --- Environment Variables & Secrets (WICHTIG!) ---
+.env
+.env.local
+.env.*
+backend/.env
+# Dein Firebase Schlüssel bloß nicht hochladen!
+serviceAccountKey.json
+backend/serviceAccountKey.json
+
+# --- Logs ---
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# --- OS & Editor Müll ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.sln
