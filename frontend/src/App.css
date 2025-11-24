@@ -1,0 +1,454 @@
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
+:root {
+  --bg-color: #121212;
+  --surface-color: #1e1e1e;
+  --surface-hover: #262626;
+  --primary-color: #bb86fc;
+  --success-color: #03dac6;
+  --danger-color: #cf6679;
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --border-radius: 12px;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  overflow-x: hidden;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+
+/* =========================================
+   2. LAYOUT CONTAINERS
+   ========================================= */
+.app-container {
+  width: 100%;
+  max-width: 900px; /* Etwas breiter für das Dashboard-Layout */
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+}
+
+.app-title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+/* =========================================
+   3. HERO SECTION (Form + Dashboard)
+   ========================================= */
+.hero-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 2rem;
+  flex-wrap: wrap; /* Wichtig für Mobile */
+  align-items: stretch;
+}
+
+/* Linker Teil: Formular Container */
+.create-task-section {
+  flex: 3;
+  min-width: 300px;
+  background-color: var(--surface-color);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 0;
+}
+
+/* Rechter Teil: Dashboard Wrapper */
+.dashboard-wrapper {
+  flex: 2;
+  min-width: 280px;
+  min-height: 250px; /* Fix für Recharts Warnung */
+}
+
+
+/* =========================================
+   4. DASHBOARD STYLES
+   ========================================= */
+.dashboard-container {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  height: 100%; /* Füllt den Wrapper aus */
+  box-sizing: border-box;
+  padding: 1rem 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+/* Einzelne Chart Box */
+.dashboard-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 10px;
+  width: 100%;
+  min-width: 0; /* Verhindert Flexbox-Overflow */
+}
+
+.dashboard-stat h3, .chart-title {
+  margin: 0 0 5px 0;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dashboard-divider {
+  width: 1px;
+  height: 70%;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.stats-row {
+  margin-top: -5px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.big-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.small-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+
+/* =========================================
+   5. FORMS & BUTTONS
+   ========================================= */
+.task-form h3 { margin-top: 0; color: var(--primary-color); text-align: center; }
+.form-group { margin-bottom: 1rem; }
+.form-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Buttons General */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.btn:active { transform: scale(0.98); }
+
+.btn-create, .btn-save { background: var(--primary-color); color: #000; width: 100%; }
+.btn-cancel { background: transparent; border: 1px solid #555; color: #ccc; }
+.btn-google { background: white; color: #333; }
+.btn-logout { background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color); }
+
+
+/* =========================================
+   6. FILTER BAR
+   ========================================= */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.filter-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.1); }
+.filter-btn.active {
+  background: var(--primary-color);
+  color: #000;
+  box-shadow: 0 2px 8px rgba(187, 134, 252, 0.3);
+}
+
+
+/* =========================================
+   7. TASK LIST
+   ========================================= */
+.task-list { list-style: none; padding: 0; }
+
+.task-item {
+  position: relative;
+  background-color: var(--surface-color);
+  margin-bottom: 1rem;
+  padding: 1.2rem;
+  padding-right: 140px; /* Platz für Datum/Buttons */
+  border-radius: var(--border-radius);
+  border-left: 5px solid transparent;
+  min-height: 80px;
+  display: flex;
+  align-items: flex-start;
+  transition: background-color 0.2s;
+}
+
+.task-item:hover { background-color: var(--surface-hover); }
+.task-item.completed { opacity: 0.5; }
+.task-item.completed .task-title { text-decoration: line-through; }
+
+/* Toggle Switch */
+.toggle-switch {
+  width: 50px; height: 26px;
+  background-color: #444;
+  border-radius: 25px;
+  position: relative;
+  cursor: pointer;
+  margin-right: 15px; margin-top: 5px;
+  flex-shrink: 0;
+}
+.toggle-switch.active { background-color: var(--success-color); }
+.toggle-slider {
+  width: 20px; height: 20px;
+  background: white; border-radius: 50%;
+  position: absolute; top: 3px; left: 3px;
+  transition: 0.3s;
+}
+.toggle-switch.active .toggle-slider { transform: translateX(24px); }
+
+/* Task Details */
+.task-details { display: flex; flex-direction: column; width: 100%; }
+.task-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; word-break: break-word; }
+.task-desc { font-size: 0.95rem; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; line-height: 1.4; margin-bottom: 8px; }
+
+/* Priority Badges */
+.task-prio {
+  display: inline-block; font-size: 0.75rem; text-transform: uppercase; font-weight: bold;
+  padding: 2px 8px; border-radius: 4px; margin-top: 5px; width: fit-content;
+}
+.prio-high { color: #ff5252; background: rgba(255, 82, 82, 0.1); }
+.prio-medium { color: #ffb74d; background: rgba(255, 183, 77, 0.1); }
+.prio-low { color: #69f0ae; background: rgba(105, 240, 174, 0.1); }
+
+/* Absolute positioned Elements (Right Side) */
+.task-date {
+  position: absolute; top: 15px; right: 15px;
+  font-size: 0.85rem; color: var(--primary-color); font-weight: 600;
+  background: rgba(187, 134, 252, 0.1);
+  padding: 4px 8px; border-radius: 6px;
+}
+
+.task-actions {
+  position: absolute; top: 55px; right: 15px;
+  display: flex; gap: 8px;
+}
+
+.btn-icon {
+  width: 40px; height: 40px;
+  border-radius: 8px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 1.2rem; transition: 0.2s;
+}
+.btn-edit:hover { background: rgba(255, 255, 255, 0.3); color: white; }
+.btn-delete:hover { background: rgba(207, 102, 121, 0.2); color: var(--danger-color); }
+
+
+/* =========================================
+   8. MODAL & UTILS
+   ========================================= */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background-color: var(--surface-color);
+  padding: 1.5rem; border-radius: var(--border-radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  width: 90%; max-width: 500px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
+.modal-actions button { width: auto; }
+
+/* Skeleton Loading */
+@keyframes pulse {
+  0% { background-color: #2a2a2a; }
+  50% { background-color: #3a3a3a; }
+  100% { background-color: #2a2a2a; }
+}
+.skeleton {
+  height: 60px; margin-bottom: 10px; border-radius: 12px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* =========================================
+   9. RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+  .hero-section { flex-direction: column; }
+  .dashboard-container { padding: 1rem; }
+  .filter-bar { overflow-x: auto; max-width: 100%; } /* Scrollbar für Filter auf Mobile */
+}
+
+/* --- HERO SECTION (Form + Dashboard nebeneinander) --- */
+.hero-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 2rem;
+  /* Sorgt dafür, dass sie auf Handys untereinander rutschen */
+  flex-wrap: wrap;
+  align-items: stretch; /* Gleich hoch ziehen */
+}
+
+/* Linker Teil (Formular) */
+.create-task-section {
+  flex: 3; /* Nimmt 60% des Platzes */
+  min-width: 300px;
+  margin-bottom: 0; /* Margin entfernen, da jetzt im Flex container */
+}
+
+/* Rechter Teil (Dashboard Wrapper) */
+.dashboard-wrapper {
+  flex: 2; /* Nimmt 40% des Platzes */
+  min-width: 280px;
+}
+
+
+/* --- DASHBOARD STYLES --- */
+.dashboard-container {
+  background-color: var(--surface-color);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  height: 100%; /* Füllt die Höhe des Wrappers */
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap; /* Falls Dashboard zu eng wird */
+  gap: 10px;
+}
+
+.dashboard-stat {
+  text-align: center;
+  min-width: 80px;
+}
+
+.dashboard-stat h3 {
+  margin: 0 0 5px 0;
+  color: var(--primary-color);
+  font-size: 1rem;
+}
+
+.progress-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--success-color);
+  line-height: 1;
+}
+
+.sub-text {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin: 5px 0 0 0;
+}
+
+.dashboard-chart-wrapper {
+  width: 120px;
+  height: 120px;
+}
+
+
+/* --- MOBILE ANPASSUNG --- */
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column; /* Untereinander auf Handys */
+  }
+
+  .dashboard-container {
+    justify-content: center;
+    padding: 1rem;
+  }
+}
