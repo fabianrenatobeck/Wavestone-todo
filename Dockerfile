@@ -1,37 +1,37 @@
 # --- STAGE 1: Frontend Bauen ---
-FROM node:18-alpine AS frontend-builder
+# WICHTIG: Node 22 nutzen (Vite braucht das!)
+FROM node:22-alpine AS frontend-builder
 
-# Wir gehen in einen temporären Ordner
 WORKDIR /build
 
-# Frontend-Pakete installieren
-COPY frontend/package*.json ./
+# Frontend Dependencies installieren
+# Wir kopieren package.json ZUERST, damit Docker cachen kann
+COPY Frontend/package*.json ./
 RUN npm install
 
-# Frontend-Code kopieren und bauen
-COPY frontend/ .
+# Jetzt den Rest kopieren
+COPY Frontend/ .
+# Bauen
 RUN npm run build
-# Das Ergebnis liegt jetzt im Container unter /build/dist
 
 
 # --- STAGE 2: Backend Setup ---
-FROM node:18-alpine
+# Auch hier Node 22
+FROM node:22-alpine
 
 WORKDIR /app
 
-# Backend-Pakete installieren
-COPY backend/package*.json ./
-RUN npm install
+# Backend Dependencies
+COPY Backend/package*.json ./
+# Sicherstellen, dass alle wichtigen Pakete da sind
+RUN npm install && npm install express-mongo-sanitize firebase-admin cors dotenv express mongoose
 
-# Backend-Code kopieren
-COPY backend/ .
+# Backend Code kopieren
+COPY Backend/ .
 
-# WICHTIG: Wir kopieren das fertige Frontend aus Stage 1 in das Backend
-# Wir nennen den Zielordner "public" (oder "dist", je nachdem was dein Server erwartet)
+# Das gebaute Frontend aus Stage 1 in den public Ordner holen
 COPY --from=frontend-builder /build/dist ./public
 
-# Port freigeben
 EXPOSE 8080
 
-# Server starten
 CMD ["node", "server.js"]
