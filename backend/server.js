@@ -159,4 +159,5 @@ app.get('*', (req, res) => {
 
 // Port
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Wir erzwingen 0.0.0.0 (bedeutet: "Höre auf alle Anfragen, egal woher")
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
