@@ -6,11 +6,11 @@ WORKDIR /build
 
 # Frontend Dependencies installieren
 # Wir kopieren package.json ZUERST, damit Docker cachen kann
-COPY Frontend/package*.json ./
+COPY frontend/package*.json ./
 RUN npm install
 
 # Jetzt den Rest kopieren
-COPY Frontend/ .
+COPY frontend/ .
 # Bauen
 RUN npm run build
 
@@ -22,12 +22,12 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Backend Dependencies
-COPY Backend/package*.json ./
+COPY backend/package*.json ./
 # Sicherstellen, dass alle wichtigen Pakete da sind
 RUN npm install && npm install express-mongo-sanitize firebase-admin cors dotenv express mongoose
 
 # Backend Code kopieren
-COPY Backend/ .
+COPY backend/ .
 
 # Das gebaute Frontend aus Stage 1 in den public Ordner holen
 COPY --from=frontend-builder /build/dist ./public
