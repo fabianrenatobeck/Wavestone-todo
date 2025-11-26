@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # 1. Die Datenbank
+  mongodb:
+    image: mongo:latest
+    container_name: tasks-db
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  # 2. Deine komplette App (Frontend + Backend in einem)
+  app:
+    build: .  # Nutzt das Dockerfile im aktuellen Ordner
+    container_name: tasks-app
+    ports:
+      - "8080:8080" # Frontend ist jetzt auch hier erreichbar!
+    environment:
+      - PORT=8080
+      - MONGODB_URI=mongodb://mongodb:27017/tasksdb
+      - ENABLE_FIREBASE=true
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/serviceAccountKey.json
+    volumes:
+      # Service Account mounten
+      - ./backend/serviceAccountKey.json:/app/serviceAccountKey.json
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:
