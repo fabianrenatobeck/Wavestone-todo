@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import TaskList from './Components/TaskListe.jsx';
-import Dashboard from './Components/Dashboard.jsx'; // Stelle sicher, dass Dashboard.jsx existiert
+import TaskList from './components/TaskListe.jsx';
+import Dashboard from './components/Dashboard.jsx'; // Stelle sicher, dass Dashboard.jsx existiert
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithGoogle } from "./firebase.js";
 import { Toaster, toast } from 'react-hot-toast';
