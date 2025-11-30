@@ -1,33 +1,32 @@
 const admin = require('firebase-admin');
 
 function initializeFirebaseAdmin() {
-    // Verhindern, dass wir mehrfach initialisieren
-    if (admin.apps.length > 0) {
-        return;
-    }
+    if (admin.apps.length > 0) return;
+
+    // HIER DEINE FIREBASE PROJEKT ID EINTRAGEN!
+    // (Das stand in deinem JSON File von vorhin)
+    const FIREBASE_PROJECT_ID = "task-manager-476be";
 
     try {
-        // VERSUCH 1: LOKAL (mit Datei)
-        // Wir versuchen, die Datei zu laden. Wenn sie fehlt, springt er in den 'catch'-Block.
+        // VERSUCH 1: LOKAL
         const serviceAccount = require('./serviceAccountKey.json');
-
         admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount)
+            credential: admin.credential.cert(serviceAccount),
+            projectId: FIREBASE_PROJECT_ID // Wichtig!
         });
-        console.log(">>> AUTH: Firebase Admin mit LOKALER JSON-Datei gestartet.");
+        console.log(">>> AUTH: Start Lokal mit Datei.");
 
     } catch (error) {
-        // VERSUCH 2: CLOUD (ohne Datei, via IAM)
-        // Wenn die Datei fehlt, nutzen wir die Cloud Run Identität
-        console.log(">>> AUTH: Keine lokale Key-Datei gefunden. Versuche Cloud-Identität (Application Default Credentials)...");
-
+        // VERSUCH 2: CLOUD (IAM)
+        console.log(">>> AUTH: Start Cloud IAM...");
         try {
             admin.initializeApp({
-                credential: admin.credential.applicationDefault()
+                credential: admin.credential.applicationDefault(),
+                projectId: FIREBASE_PROJECT_ID // <--- DAS FIXT DAS PROBLEM!
             });
-            console.log(">>> AUTH: Firebase Admin via CLOUD IAM gestartet.");
+            console.log(`>>> AUTH: Erfolgreich für Projekt ${FIREBASE_PROJECT_ID} gestartet.`);
         } catch (cloudError) {
-            console.error(">>> AUTH FATAL: Konnte Firebase auch nicht via Cloud starten:", cloudError);
+            console.error(">>> AUTH FATAL:", cloudError);
             throw cloudError;
         }
     }

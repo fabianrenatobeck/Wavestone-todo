@@ -47,8 +47,13 @@ if (process.env.ENABLE_FIREBASE === 'true') {
                 const decoded = await verifyIdToken(idToken);
                 req.user = decoded;
                 next();
+                // ...
             } catch (err) {
-                return res.status(401).json({ error: 'Invalid Token' });
+                // WICHTIG: Den genauen Fehler ausgeben!
+                console.error('>>> TOKEN ERROR DETAILS:', JSON.stringify(err, null, 2));
+                console.error('>>> Error Code:', err.code);
+                console.error('>>> Error Message:', err.message);
+                return res.status(401).json({ error: 'Invalid token', details: err.message });
             }
         };
     } catch (e) {
