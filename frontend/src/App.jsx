@@ -172,15 +172,28 @@ function App() {
         );
         setTasks(updatedTasks);
 
+        // Lokale Level-Berechnung (damit wir fetchTasks nicht brauchen)
+        const completedCount = updatedTasks.filter(t => t.completed).length;
+        const newLevel = Math.floor(completedCount / 3) + 1;
+        setLevel(newLevel);
+        setXp(completedCount * 100);
+
         try {
+            // 2. An den Server senden (Hintergrund)
             await fetch(`/tasks/${task._id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ completed: !task.completed }),
             });
-            fetchTasks(); // Wichtig für XP Update vom Server
+
+            // WICHTIG: DIESE ZEILE LÖSCHEN! 👇
+            // fetchTasks();
+            // Wir brauchen sie nicht, weil wir oben (1.) schon alles aktualisiert haben.
+            // Das verhindert das Neuladen und das Springen.
+
         } catch (err) {
             toast.error("Fehler beim Speichern");
+            // Nur im Fehlerfall laden wir neu, um den alten Stand zu holen
             fetchTasks();
         }
     };

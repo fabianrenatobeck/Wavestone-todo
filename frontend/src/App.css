@@ -15,10 +15,14 @@
 }
 
 html, body, #root {
-  height: 100%;
+  min-height: 100vh; /* Mindestens Bildschirmhöhe, aber wächst mit */
   width: 100%;
   margin: 0;
   padding: 0;
+
+  /* WICHTIG für Flexbox Zentrierung im Root */
+  display: flex;
+  flex-direction: column;
 }
 
 body {
@@ -29,9 +33,9 @@ body {
 }
 
 #root {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 /* Custom Scrollbar */
