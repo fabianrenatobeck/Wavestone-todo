@@ -1,10 +1,15 @@
 # 📝 Wavestone Task Tracker
 
-Eine moderne, containerisierte Fullstack-Anwendung zur Aufgabenverwaltung. Entwickelt mit **React**, **Node.js** und **MongoDB**, abgesichert durch **Firebase Authentication** und bereitgestellt via **Docker**.
+> **🚀 Live Demo:** [Hier klicken, um die App zu öffnen](https://wavestone-todo-945805174730.europe-west1.run.app)
+>
+> *(Hinweis: Login erfolgt via Google Account. Die Daten werden sicher in MongoDB Atlas gespeichert.)*
 
-![Status](https://img.shields.io/badge/Status-Completed-success)
+Eine moderne, containerisierte Fullstack-Anwendung zur Aufgabenverwaltung. Entwickelt mit **React**, **Node.js** und **MongoDB**, abgesichert durch **Firebase Authentication** und bereitgestellt via **Docker** auf **Google Cloud Run**.
+
+![Status](https://img.shields.io/badge/Status-Live-success)
 ![Tech](https://img.shields.io/badge/Stack-MERN-blue)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)
+![Cloud](https://img.shields.io/badge/Hosted_on-Google_Cloud_Run-4285F4)
 
 ## ✨ Features
 
@@ -19,7 +24,7 @@ Eine moderne, containerisierte Fullstack-Anwendung zur Aufgabenverwaltung. Entwi
 * **Single-Container Deployment:** Multi-Stage Docker Build vereint Frontend und Backend in einem optimierten Image.
 * **Security First:** Schutz vor NoSQL Injections durch `express-mongo-sanitize` und Backend-Token-Verifizierung.
 * **Modern UI/UX:** Responsive Dark Mode Design, Skeleton Loading States und Toast-Benachrichtigungen.
-* **Production Ready:** Statisches Ausliefern des React-Builds durch Express.
+* **Production Ready:** Statisches Ausliefern des React-Builds durch Express (Port 8080).
 
 ---
 
@@ -39,20 +44,19 @@ Eine moderne, containerisierte Fullstack-Anwendung zur Aufgabenverwaltung. Entwi
 
 ### DevOps & Infrastruktur
 * **Docker:** Multi-Stage Build (Node Alpine Base).
-* **Docker Compose:** Orchestrierung von App und lokaler MongoDB.
-* **MongoDB:** Persistente Datenspeicherung (Volumes).
+* **Google Cloud Run:** Serverless Container Hosting.
+* **MongoDB Atlas:** Cloud-Datenbank.
 
 ---
 
 ## 🚀 Installation & Start
 
 ### Voraussetzung
-* Docker Desktop installiert
-* Eine `serviceAccountKey.json` von Firebase im Ordner `backend/` (Optional für Auth Features).
+* Docker Desktop installiert (für lokale Entwicklung)
 
-### Option A: Start mit Docker (Empfohlen)
+### Option A: Start mit Docker (Lokal)
 
-Dies startet die komplette Umgebung (MongoDB + App) isoliert.
+Dies startet die komplette Umgebung (MongoDB + App) isoliert auf deinem Rechner.
 
 1.  **Repository klonen**
     ```bash
@@ -60,42 +64,23 @@ Dies startet die komplette Umgebung (MongoDB + App) isoliert.
     cd wavestone_aufgabenliste
     ```
 
-2.  **Environment Variablen setzen**
-    Erstelle eine `.env` Datei oder passe `docker-compose.yml` an. (Standardmäßig ist Docker Compose vorkonfiguriert).
-
-3.  **Container bauen und starten**
+2.  **Container bauen und starten**
     ```bash
     docker-compose up --build
     ```
 
-4.  **App öffnen**
+3.  **App öffnen**
     Besuche `http://localhost:8080` im Browser.
 
----
+### Option B: Cloud Deployment (Google Cloud Run)
 
-### Option B: Lokale Entwicklung (Ohne Docker)
+Das Projekt ist für CI/CD via Cloud Build konfiguriert.
 
-Falls du am Code arbeiten möchtest:
-
-1.  **Backend starten**
-    ```bash
-    cd backend
-    npm install
-    # Stelle sicher, dass MongoDB lokal läuft oder MONGODB_URI in .env gesetzt ist
-    npm run dev
-    ```
-
-2.  **Frontend starten**
-    ```bash
-    cd frontend
-    npm install
-    npm run dev
-    ```
-
-3.  **Zugriff**
-    * Frontend: `http://localhost:5173`
-    * Backend API: `http://localhost:8080`
-    * *Hinweis:* Der Vite-Proxy leitet API-Anfragen von 5173 automatisch an 8080 weiter.
+1.  **Dockerfile:** Nutzt einen Multi-Stage Build, um Frontend-Assets zu bauen und vom Node-Server auszuliefern.
+2.  **Environment Variables:** Folgende Variablen müssen in Cloud Run gesetzt sein:
+    * `MONGODB_URI`: Connection String zu MongoDB Atlas.
+    * `ENABLE_FIREBASE`: `true`
+3.  **IAM Rechte:** Dem Cloud Run Dienstkonto muss die Rolle `Firebase Admin SDK Administrator Service Agent` zugewiesen sein.
 
 ---
 
@@ -106,7 +91,7 @@ project/
 ├── backend/
 │   ├── models/           # Mongoose Schemas (Task.js)
 │   ├── server.js         # Express Server & API Routen
-│   ├── firebaseAdmin.js  # Firebase Admin Init
+│   ├── firebaseAdmin.js  # Firebase Admin Init (mit IAM Fallback)
 │   └── Dockerfile        # Backend Build Anweisungen
 ├── frontend/
 │   ├── src/
@@ -114,5 +99,5 @@ project/
 │   │   ├── App.jsx       # Hauptlogik & State
 │   │   └── App.css       # Globales Styling
 │   └── Dockerfile        # Frontend Build Anweisungen (für Stage 1)
-├── docker-compose.yml    # Orchestrierung
+├── docker-compose.yml    # Orchestrierung für lokale Entwicklung
 └── Dockerfile            # Production Multi-Stage Build (All-in-One)
