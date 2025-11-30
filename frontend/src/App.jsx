@@ -5,7 +5,7 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithGoogle } from "./firebase.js";
 import { Toaster, toast } from 'react-hot-toast';
 import Confetti from 'react-confetti'; // 🎉 NEU
-import useWindowSize from 'react-use/lib/useWindowSize'; // 🎉 NEU: Für Konfetti-Größe
+import { useWindowSize } from 'react-use';
 import "./App.css";
 
 const auth = getAuth();
