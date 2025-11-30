@@ -3,16 +3,17 @@ const admin = require('firebase-admin');
 function initializeFirebaseAdmin() {
     if (admin.apps.length > 0) return;
 
-    // HIER DEINE FIREBASE PROJEKT ID EINTRAGEN!
-    // (Das stand in deinem JSON File von vorhin)
-    const FIREBASE_PROJECT_ID = "task-manager-476be";
+    // --- HIER WAR DER FEHLER ---
+    // Wir nehmen jetzt die ID, die das Frontend uns im Token schickt (aus dem Log):
+    const FIREBASE_PROJECT_ID = "auth-wavestone";
+    // ---------------------------
 
     try {
         // VERSUCH 1: LOKAL
         const serviceAccount = require('./serviceAccountKey.json');
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
-            projectId: FIREBASE_PROJECT_ID // Wichtig!
+            projectId: FIREBASE_PROJECT_ID
         });
         console.log(">>> AUTH: Start Lokal mit Datei.");
 
@@ -22,7 +23,7 @@ function initializeFirebaseAdmin() {
         try {
             admin.initializeApp({
                 credential: admin.credential.applicationDefault(),
-                projectId: FIREBASE_PROJECT_ID // <--- DAS FIXT DAS PROBLEM!
+                projectId: FIREBASE_PROJECT_ID
             });
             console.log(`>>> AUTH: Erfolgreich für Projekt ${FIREBASE_PROJECT_ID} gestartet.`);
         } catch (cloudError) {
